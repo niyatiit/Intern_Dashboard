@@ -1,3 +1,4 @@
+import { use } from "react";
 import { User } from "../models/user.model.js";
 import bcrypt from "bcrypt";
 
@@ -80,4 +81,26 @@ const logout = async (req, res) => {
     return res.json({ success: false, message: err.message });
   }
 };
-export { register, login, logout };
+
+// Dashboard
+const getDashboardData = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.json({ success: false, message: "User Not Found" });
+    }
+
+    return res.json({
+      name: user.username,
+      referralCode: user.referralCode,
+      totalDonations: user.totalDonations || 0,
+      rewards: ["Certificate Unlocked", "T-Shirt Unlocked"],
+    });
+  } catch (err) {
+    return res.json({ success: false, message: err.message });
+  }
+};
+export { register, login, logout, getDashboardData };
