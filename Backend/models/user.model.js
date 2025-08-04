@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
       validator: function (v) {
         return /^\d{10}$/.test(v); // ✅ validate 10-digit numbers
       },
-      message: (props) => `${props.value} is not a valid 10-digit number!`,
+      message: (props) => `${props.value} Please Enter 10 digit only!`,
     },
   },
   referralCode: {
@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
   totalDonations: {
     type: String,
     required: true,
-    default: 0,
+    default: 1,
   },
   rewards: {
     type: [String],

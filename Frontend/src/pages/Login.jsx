@@ -1,10 +1,15 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 export default function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -25,9 +30,16 @@ export default function Login() {
       const data = await res.json();
 
       if (data.success) {
-        localStorage.setItem("userId", data.userId);
-        alert("Login Successful!");
-        window.location.href = "/";
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("userId", data.user._id);
+        toast.success("Logged in successfully!");
+
+        setFormData({
+          email: "",
+          password: "",
+        });
+
+        navigate("/dashboard");
       } else {
         alert(data.message || "Login Failed");
       }
@@ -47,24 +59,35 @@ export default function Login() {
         <input
           type="email"
           name="email"
+          value={formData.email}
           placeholder="Email"
           className="w-full p-2 rounded bg-[#1f2a44] text-white"
           onChange={handleChange}
           required
         />
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          className="w-full p-2 rounded bg-[#1f2a44] text-white"
-          onChange={handleChange}
-          required
-        />
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            value={formData.password}
+            placeholder="Password"
+            className="w-full p-2 pr-10 rounded bg-[#1f2a44] text-white"
+            onChange={handleChange}
+            required
+          />
+          <button
+            type="button"
+            className="absolute right-2 top-2 text-sm text-gray-300"
+            onClick={() => setShowPassword((prev) => !prev)}
+          >
+            {showPassword ? "Hide" : "Show"}
+          </button>
+        </div>
 
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 p-2 rounded font-semibold"
+          className="w-full bg-blue-600 hover:bg-blue-700 p-2 rounded font-semibold cursor-pointer"
         >
           Login
         </button>

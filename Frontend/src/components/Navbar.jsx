@@ -1,26 +1,57 @@
 // src/components/Navbar.jsx
-export default function Navbar({ isLoggedIn }) {
+import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+export default function Navbar() {
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    setIsLoggedIn(!!userId);
+  }, [localStorage.getItem("userId")]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    setIsLoggedIn(false);
+    navigate("/login");
+  };
+
+  // Function to apply active styles
+  const navStyle = ({ isActive }) =>
+    isActive
+      ? "font-bold text-zinc-400 underline transition duration-200"
+      : "hover:text-zinc-400 transition duration-200";
+
   return (
     <nav className="bg-[#14213d] text-white shadow-md px-6 py-4 flex justify-between items-center">
-      <h1 className="text-xl font-bold">My Dashboard</h1>
-      <div className="space-x-4">
-        {!isLoggedIn ? (
+      {/* Logo */}
+      <h1 className="text-2xl font-extrabold tracking-wide ">
+        💀MyInterns
+      </h1>
+
+      {/* Navigation */}
+      <div className="space-x-6 text-lg">
+        {isLoggedIn ? (
           <>
-            <a href="/signup" className="hover:underline">Signup</a>
-            <a href="/login" className="hover:underline">Login</a>
-          </>
-        ) : (
-          <>
-            <a href="/dashboard" className="hover:underline">Dashboard</a>
+            <NavLink to="/dashboard" className={navStyle}>
+              Dashboard
+            </NavLink>
             <button
-              onClick={() => {
-                localStorage.removeItem("userId");
-                window.location.reload();
-              }}
-              className="hover:underline"
+              onClick={handleLogout}
+              className="hover:text-zinc-400 transition duration-200 cursor-pointer"
             >
               Logout
             </button>
+          </>
+        ) : (
+          <>
+            <NavLink to="/signup" className={navStyle}>
+              Signup
+            </NavLink>
+            <NavLink to="/login" className={navStyle}>
+              Login
+            </NavLink>
           </>
         )}
       </div>

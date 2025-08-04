@@ -1,13 +1,18 @@
-// src/components/Signup.jsx
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 export default function Signup() {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
-    contactNo: "",
+    contactNumber: "",
   });
+
+  const [showPassword, setShowPassword] = useState(false); // 👈 Password toggle state
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -26,7 +31,14 @@ export default function Signup() {
       });
       const data = await res.json();
       if (data.success) {
-        alert("Registered Successfully!");
+        toast.success("Registration Successfully");
+        setFormData({
+          username: "",
+          email: "",
+          password: "",
+          contactNumber: "",
+        });
+        navigate("/login");
       } else {
         alert(data.message || "Registration Failed");
       }
@@ -49,6 +61,7 @@ export default function Signup() {
           placeholder="Username"
           className="w-full p-2 rounded bg-[#1f2a44] text-white"
           onChange={handleChange}
+          value={formData.username}
           required
         />
 
@@ -58,30 +71,41 @@ export default function Signup() {
           placeholder="Email"
           className="w-full p-2 rounded bg-[#1f2a44] text-white"
           onChange={handleChange}
+          value={formData.email}
           required
         />
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          className="w-full p-2 rounded bg-[#1f2a44] text-white"
-          onChange={handleChange}
-          required
-        />
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            placeholder="Password"
+            className="w-full p-2 rounded bg-[#1f2a44] text-white pr-10"
+            onChange={handleChange}
+            value={formData.password}
+            required
+          />
+          <span
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-3 top-2 cursor-pointer text-sm text-gray-300"
+          >
+            {showPassword ? "Hide" : "Show"}
+          </span>
+        </div>
 
         <input
-          type="text"
-          name="contactNo"
+          type="number"
+          name="contactNumber"
           placeholder="Contact No"
           className="w-full p-2 rounded bg-[#1f2a44] text-white"
           onChange={handleChange}
+          value={formData.contactNumber}
           required
         />
 
         <button
           type="submit"
-          className="w-full bg-green-600 hover:bg-green-700 p-2 rounded font-semibold"
+          className="w-full bg-green-600 hover:bg-green-700 p-2 rounded font-semibold cursor-pointer"
         >
           Register
         </button>
