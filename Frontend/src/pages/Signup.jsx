@@ -24,7 +24,7 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:3000/api/auth/register", {
+      const res = await fetch("https://intern-dashboard-ashen.vercel.app/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -53,7 +53,7 @@ export default function Signup() {
         onSubmit={handleSubmit}
         className="bg-[#14213d] p-8 rounded-xl w-full max-w-md shadow-lg space-y-4"
       >
-        <h2 className="text-2xl font-bold text-center mb-4">Register</h2>
+        <h2 className="text-2xl font-bold text-center mb-4">Sign Up</h2>
 
         <input
           type="text"
